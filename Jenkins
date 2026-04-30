@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage("Code Clone") {
+            steps {
+                git url: "https://github.com/sopatel14/nodejs-getting-started.git", branch: "main"
+            }
+        }
+
+        stage("Build") {
+            steps {
+                sh "docker build -t new-nodejs:latest ."
+            }
+        }
+
+       stage("Push") {
+    steps {
+       
+        withCredentials([string(credentialsId: 'dockerhub-cred', variable: 'TOKEN')]) {
+            sh 'echo $TOKEN | docker login -u sopatel264 --password-stdin'
+            sh "docker tag new-nodejs:latest sopatel264/new-nodejs:latest"
+            sh "docker push sopatel264/new-nodejs:latest"
+        }
+    }
+}
+        
+
+        stage("Deploy") {
+            steps {
+                sh '''
+                docker stop node-app || true
+                docker rm node-app || true
+                docker pull sopatel264/new-nodejs:latest
+                docker run -d -p 5006:5006 --name node-app sopatel264/new-nodejs:latest
+                '''
+            }
+        }
+    }
+}
