@@ -1,66 +1,187 @@
-# nodejs-getting-started
+# 🚀 Node.js CI/CD Pipeline with Jenkins, Docker & AWS
 
-A barebones Node.js app using [Express](https://expressjs.com/).
+Before containerizing and deploying, the application was tested locally to ensure it runs correctly.
 
-This application supports the tutorials for both the [Cedar and Fir generations](https://devcenter.heroku.com/articles/generations) of the Heroku platform. You can check them out here:
+## 🧪 Local Development & Testing
 
-* [Getting Started on Heroku with Node.js](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-* [Getting Started on Heroku Fir with Node.js](https://devcenter.heroku.com/articles/getting-started-with-nodejs-fir)
 
-## Running Locally
+### 1. Install Dependencies
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
-
-```sh
-$ git clone https://github.com/heroku/nodejs-getting-started.git # or clone your own fork
-$ cd nodejs-getting-started
-$ npm install
-$ npm start
+```bash
+npm install
 ```
 
-Your app should now be running on [localhost:5006](http://localhost:5006/).
+### 2. Run Application
 
-## Deploying to Heroku
-
-Using resources for this example app counts towards your usage. [Delete your app](https://devcenter.heroku.com/articles/heroku-cli-commands#heroku-apps-destroy) and [database](https://devcenter.heroku.com/articles/heroku-postgresql#removing-the-add-on) as soon as you are done experimenting to control costs.
-
-### Deploy on [Cedar][cedar]
-
-By default, apps use Eco dynos on [Cedar][cedar] if you are subscribed to Eco. Otherwise, it defaults to Basic dynos. The 
-Eco dynos plan is shared across all Eco dynos in your account and is recommended if you plan on deploying many small apps 
-to Heroku. Learn more about our low-cost plans [here](https://blog.heroku.com/new-low-cost-plans).
-
-Eligible students can apply for platform credits through our new [Heroku for GitHub Students program](https://blog.heroku.com/github-student-developer-program).
-
-```
-$ heroku create
-$ git push heroku main
-$ heroku open
+```bash
+npm start
 ```
 
-### Deploy on [Fir][fir]
+### 3. Access Application
 
-By default, apps on [Fir][fir] use 1X-Classic dynos. To create an app on [Fir][fir] you'll need to 
-[create a private space](https://devcenter.heroku.com/articles/working-with-private-spaces#create-a-private-space)
-first.
-
-```
-$ heroku spaces:create <space-name> --team <team-name> --generation fir
-$ heroku create --space <space-name>
-$ git push heroku main
-$ heroku open
+```bash
+http://localhost:5006
 ```
 
-## Documentation
+### ✅ Purpose
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
+* Validate application functionality before Dockerizing
+* Catch runtime errors early
+* Ensure correct port configuration
 
-- [Getting Started on Heroku with Node.js](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Getting Started on Heroku Fir with Node.js](https://devcenter.heroku.com/articles/getting-started-with-nodejs-fir)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
+---
 
-[cedar]: https://devcenter.heroku.com/articles/generations#cedar
-[fir]: https://devcenter.heroku.com/articles/generations#fir
+## 🐳 Dockerization
+
+After verifying the app locally, it was containerized using Docker.
+
+### Build Image
+
+```bash
+docker build -t new-nodejs:latest .
+```
+
+### Run Container
+
+```bash
+docker run -d -p 5006:5006 new-nodejs:latest
+```
+
+### Access Application
+
+```bash
+http://localhost:5006
+```
+
+
+
+
+---
+
+## 📖 Overview
+
+This project demonstrates a complete **CI/CD pipeline** for a Node.js application using Jenkins, Docker, and AWS EC2.
+
+The pipeline automates:
+
+* Building a Docker image
+* Pushing the image to Docker Hub
+* Deploying the application on AWS EC2
+
+---
+
+## 🏗️ Architecture
+
+```bash
+GitHub → Jenkins → Docker Build → Docker Hub → AWS EC2
+```
+
+---
+
+## ⚙️ Tech Stack
+
+* Node.js
+* Jenkins
+* Docker
+* Docker Hub
+* AWS EC2
+
+---
+
+## 🔄 CI/CD Pipeline Flow
+
+### 1. Code Checkout
+
+```bash
+git clone https://github.com/sopatel14/nodejs-getting-started.git
+```
+
+### 2. Build Docker Image
+
+```bash
+docker build -t new-nodejs:latest .
+```
+
+### 3. Push to Docker Hub
+
+```bash
+docker tag new-nodejs:latest sopatel264/new-nodejs:latest
+docker push sopatel264/new-nodejs:latest
+```
+
+### 4. Deploy on EC2
+
+```bash
+docker stop node-app || true
+docker rm node-app || true
+docker pull sopatel264/new-nodejs:latest
+docker run -d -p 5006:5006 --name node-app sopatel264/new-nodejs:latest
+```
+
+---
+
+## 📸 Application Running
+
+> Add your screenshot here
+
+```bash
+<img width="1279" height="894" alt="image" src="https://github.com/user-attachments/assets/da0d74fd-e073-44a3-bc81-d9a67807ee08" />
+
+```
+
+---
+
+## 📂 Project Structure
+
+```bash
+.
+├── Dockerfile
+├── Jenkinsfile
+├── package.json
+├── index.js
+
+```
+
+---
+
+## ⚠️ Challenges Faced
+
+```bash
+- Docker container conflicts (port already in use)
+- Jenkins credential configuration issues
+- Debugging container startup failures
+- Managing limited EC2 resources (low RAM)
+```
+
+---
+
+## 📈 Future Improvements
+
+```bash
+- Implement version-based tagging instead of 'latest'
+- Add rollback mechanism
+- Introduce monitoring (Prometheus, Grafana)
+- Use separate EC2 for Jenkins and application
+- Automate infrastructure using Terraform
+```
+
+---
+
+## 🎯 Key Learnings
+
+```bash
+- CI/CD pipeline design and automation
+- Secure credential handling in Jenkins
+- Docker image vs container lifecycle
+- Importance of idempotent deployments
+- Debugging real-world DevOps issues
+```
+
+---
+
+## 👨‍💻 Author
+
+**Sourav Patel**
+Aspiring DevOps Engineer
+
+---
