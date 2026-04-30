@@ -122,12 +122,9 @@ docker run -d -p 5006:5006 --name node-app sopatel264/new-nodejs:latest
 
 ## 📸 Application Running
 
-> Add your screenshot here
+<img width="2558" height="1788" alt="image" src="https://github.com/user-attachments/assets/315f919d-172c-4c50-aa6c-520c43b6bae8" />
 
-```bash
-<img width="1279" height="894" alt="image" src="https://github.com/user-attachments/assets/da0d74fd-e073-44a3-bc81-d9a67807ee08" />
 
-```
 
 ---
 
