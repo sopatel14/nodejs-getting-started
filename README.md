@@ -1,184 +1,68 @@
-# 🚀 Node.js CI/CD Pipeline with Jenkins, Docker & AWS
+# Node.js CI/CD pipeline with Jenkins, Docker & AWS EC2
 
-Before containerizing and deploying, the application was tested locally to ensure it runs correctly.
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=white)
+![AWS EC2](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat&logo=amazonaws&logoColor=white)
 
-## 🧪 Local Development & Testing
-
-
-### 1. Install Dependencies
-
-```bash
-npm install
-```
-
-### 2. Run Application
-
-```bash
-npm start
-```
-
-### 3. Access Application
-
-```bash
-http://localhost:5006
-```
-
-### ✅ Purpose
-
-* Validate application functionality before Dockerizing
-* Catch runtime errors early
-* Ensure correct port configuration
+> **Note:** The Node.js application is based on Heroku's open-source starter template. All DevOps work — Dockerfile, Jenkinsfile, CI/CD pipeline design, and AWS EC2 deployment — was implemented by me as a hands-on learning project.
 
 ---
 
-## 🐳 Dockerization
+## What this project does
 
-After verifying the app locally, it was containerized using Docker.
+A complete automated deployment pipeline that takes code from GitHub, builds a Docker image, pushes it to Docker Hub, and deploys it to an AWS EC2 instance — all triggered automatically via Jenkins.
 
-### Build Image
+## Pipeline architecture
 
-```bash
-docker build -t new-nodejs:latest .
 ```
-
-### Run Container
-
-```bash
-docker run -d -p 5006:5006 new-nodejs:latest
-```
-
-### Access Application
-
-```bash
-http://localhost:5006
-```
-
-
-
-
----
-
-## 📖 Overview
-
-This project demonstrates a complete **CI/CD pipeline** for a Node.js application using Jenkins, Docker, and AWS EC2.
-
-The pipeline automates:
-
-* Building a Docker image
-* Pushing the image to Docker Hub
-* Deploying the application on AWS EC2
-
----
-
-## 🏗️ Architecture
-
-```bash
-GitHub → Jenkins → Docker Build → Docker Hub → AWS EC2
+GitHub push → Jenkins trigger → Docker build → Docker Hub push → EC2 deploy
 ```
 
 ---
 
-## ⚙️ Tech Stack
-
-* Node.js
-* Jenkins
-* Docker
-* Docker Hub
-* AWS EC2
-
----
-
-## 🔄 CI/CD Pipeline Flow
-
-### 1. Code Checkout
+## Run locally
 
 ```bash
 git clone https://github.com/sopatel14/nodejs-getting-started.git
+cd nodejs-getting-started
+npm install
+npm start
+# App runs at http://localhost:5006
 ```
 
-### 2. Build Docker Image
+## Run with Docker
 
 ```bash
 docker build -t new-nodejs:latest .
+docker run -d -p 5006:5006 new-nodejs:latest
+# App runs at http://localhost:5006
 ```
 
-### 3. Push to Docker Hub
+## Jenkins pipeline stages
 
-```bash
-docker tag new-nodejs:latest sopatel264/new-nodejs:latest
-docker push sopatel264/new-nodejs:latest
 ```
-
-### 4. Deploy on EC2
-
-```bash
-docker stop node-app || true
-docker rm node-app || true
-docker pull sopatel264/new-nodejs:latest
-docker run -d -p 5006:5006 --name node-app sopatel264/new-nodejs:latest
+1. Checkout    – clone repo from GitHub
+2. Build       – docker build -t new-nodejs:latest .
+3. Push        – tag & push to sopatel264/new-nodejs on Docker Hub
+4. Deploy      – SSH into EC2, pull image, restart container
 ```
 
 ---
 
-## 📸 Application Running
+## Challenges & how I solved them
 
-<img width="2558" height="1788" alt="image" src="https://github.com/user-attachments/assets/315f919d-172c-4c50-aa6c-520c43b6bae8" />
+- **Port conflicts on EC2** — added `docker stop || true` before each deploy to handle already-running containers
+- **Jenkins credential errors** — used Jenkins credential store instead of hardcoding secrets in Jenkinsfile
+- **Low EC2 RAM** — optimised the Dockerfile to reduce image size and avoid OOM kills
 
+## What's next
 
-
----
-
-## 📂 Project Structure
-
-```bash
-.
-├── Dockerfile
-├── Jenkinsfile
-├── package.json
-├── index.js
-
-```
+- Versioned Docker tags instead of `latest`
+- Terraform for EC2 provisioning
+- Prometheus + Grafana monitoring
+- Separate Jenkins and app servers
 
 ---
 
-## ⚠️ Challenges Faced
-
-```bash
-- Docker container conflicts (port already in use)
-- Jenkins credential configuration issues
-- Debugging container startup failures
-- Managing limited EC2 resources (low RAM)
-```
-
----
-
-## 📈 Future Improvements
-
-```bash
-- Implement version-based tagging instead of 'latest'
-- Add rollback mechanism
-- Introduce monitoring (Prometheus, Grafana)
-- Use separate EC2 for Jenkins and application
-- Automate infrastructure using Terraform
-```
-
----
-
-## 🎯 Key Learnings
-
-```bash
-- CI/CD pipeline design and automation
-- Secure credential handling in Jenkins
-- Docker image vs container lifecycle
-- Importance of idempotent deployments
-- Debugging real-world DevOps issues
-```
-
----
-
-## 👨‍💻 Author
-
-**Sourav Patel**
-Aspiring DevOps Engineer
-
----
+Docker Hub: `sopatel264/new-nodejs` · [LinkedIn](https://www.linkedin.com/in/sourav-patel-devops/)
