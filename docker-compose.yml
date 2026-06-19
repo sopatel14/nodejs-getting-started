@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: mydb
+
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "admin", "-d", "mydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+  redis:
+    image: redis:7
+    container_name: redis-cache
+    networks:
+      - backend
+
+  web:
+    build: .
+    container_name: node-web
+    ports:
+      - "5006:5006"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backend
+
+networks:
+  backend:
+
+
+volumes:
+  postgres_data:
+
