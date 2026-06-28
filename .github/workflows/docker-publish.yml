@@ -1,0 +1,19 @@
+
+
+
+name: Docker build-push
+
+on:
+  push:
+    
+
+jobs:
+  docker-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v5
+
+      - name: Build the docker image
+        run: docker build -t node-js-app:latest .
