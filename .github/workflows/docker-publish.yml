@@ -15,5 +15,18 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v5
 
-      - name: Build the docker image
-        run: docker build -t node-js-app:latest .
+
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ vars.DOCKER_TOKEN }}
+
+      - name: Docker build and push the image
+        uses: docker/build-push-action@v5
+        with:
+          context: nodejs-getting-started/Dockerfile
+          push: true
+          tags: ${{ vars.DOCKER_USERNAME }}/node-js nodejs-getting-started/Dockerfile:latest
+
+
