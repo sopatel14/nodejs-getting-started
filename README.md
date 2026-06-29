@@ -1,6 +1,10 @@
 # Node.js CI/CD Pipeline with Docker, AWS EC2 & Docker Compose
 
-Node.js Docker AWS EC2 DevOps Docker Compose
+[![Docker build-push](https://github.com/sopatel14/nodejs-getting-started/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/sopatel14/nodejs-getting-started/actions/workflows/docker-publish.yml)
+
+A production-ready Node.js application demonstrating containerization, CI/CD with GitHub Actions, Docker Hub image publishing, and deployment using Docker Compose on AWS EC2.
+
+**Tech Stack:** Node.js • Docker • GitHub Actions • Docker Hub • Docker Compose • AWS EC2
 
 > Note: The Node.js application is based on Heroku's open-source starter template. All DevOps work — Dockerfile, CI/CD pipeline design, AWS EC2 deployment, and Docker Compose orchestration — was implemented by me as a hands-on learning project.
 
