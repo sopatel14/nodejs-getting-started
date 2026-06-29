@@ -21,7 +21,8 @@ jobs:
 
 
       - name: Docker Login
-        if: github.ref == 'refs/heads/main'
+       # only login if its main branch otherwise its gonna fail
+        #if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKER_USERNAME }}
