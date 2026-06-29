@@ -16,7 +16,7 @@ jobs:
 
 
     steps:
-      - name: Code Checkout
+      - name: Code Clone/Checkout
         uses: actions/checkout@v5
 
 
